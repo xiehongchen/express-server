@@ -1,16 +1,71 @@
 var express = require('express');
 var router = express.Router();
+const db = require('../config/mysql')
+const jwt = require('jsonwebtoken')
 
 /* GET users listing. */
-router.get('/logIn', function(req, res, next) {
-  res.send('login');
+router.get('/logIn', function (req, res, next) {
+  const { username, password } = req.query
+  console.log(req.query)
+  console.log(username, password)
+  const sql = 'SELECT * FROM user WHERE name = ? AND password = ?'
+  db.query(sql, [username, password], (err, result) => {
+    if (err) {
+      console.log(err)
+    } else {
+      if (result.length > 0) {
+        const token = jwt.sign({ id: result[0].id }, 'sdudy', {
+          expiresIn: 60 * 60 * 24 * 7
+        })
+        res.send({
+          code: 0,
+          msg: '登录成功',
+          token
+        })
+      } else {
+        res.send({
+          code: 1,
+          msg: '用户名或密码错误'
+        })
+      }
+    }
+  })
 });
 
-router.get('/userInfo', function(req, res, next) {
+router.post('/register', function (req, res, next) {
+  const { username, password } = req.body
+  const select_sql = 'SELECT * FROM user WHERE name = ?'
+  db.query(select_sql, [username], (err, result) => {
+    if (err) {
+      console.log(err)
+    } else {
+      if (result.length > 0) {
+        res.send({
+          code: 1,
+          msg: '用户名已存在'
+        })
+      } else {
+        const sql = 'INSERT INTO user (name, password) VALUES (?, ?)'
+        db.query(sql, [username, password], (err, result) => {
+          if (err) {
+            console.log(err)
+          } else {
+            res.send({
+              code: 0,
+              msg: '注册成功'
+            })
+          }
+        })
+      }
+    }
+  })
+});
+
+router.get('/userInfo', function (req, res, next) {
   res.send('userInfo');
 });
 
-router.get('/logOff', function(req, res, next) {
+router.get('/logOff', function (req, res, next) {
   res.send('logOff');
 });
 module.exports = router;
