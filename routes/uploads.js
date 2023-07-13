@@ -3,8 +3,6 @@ const multer = require('multer');
 const router = express.Router();
 const fs = require('fs');
 const path = require('path');
-const uploadDir = path.join(__dirname, 'uploads');
-const tempDir = path.join(__dirname, 'temp');
 const saveReqToFile = require('../utils/reqToFile');
 // 创建存储上传文件的配置
 const storage = multer.diskStorage({
@@ -19,9 +17,7 @@ const storage = multer.diskStorage({
       uploadPath = 'uploads/pdfs';
     }else if (file.mimetype === 'text/markdown') {
       uploadPath = 'uploads/markdown';
-    } else {
-      uploadPath = 'uploads/others';
-    }
+    } 
     cb(null, uploadPath);
   }, 
   filename: function (req, file, cb) {
@@ -77,10 +73,17 @@ router.post('/upload2', upload.single('chunk'), (req, res) => {
 });
 
 router.post('/merge', upload.single('chunk'), (req, res) => {
+  saveReqToFile(req, 'req.json', () => {})
+  saveReqToFile(req.body, 'req.body.json', () => {})
   const file = req.file;
   const chunkIndex = req.body.chunkIndex;
   const totalChunks = req.body.totalChunks;
   const originalFilename = req.body.originalFilename;
+
+  console.log('__dirname', __dirname)
+  const uploadDir = path.join(__dirname, '../uploads');
+  const tempDir = path.join(__dirname, '../uploads/temp');
+  console.log('uploadDir', uploadDir)
 
   // 按照文件名创建目录
   const uploadDirPath = path.join(uploadDir, originalFilename);
@@ -88,18 +91,19 @@ router.post('/merge', upload.single('chunk'), (req, res) => {
     fs.mkdirSync(uploadDirPath);
   }
 
-  // 将临时文件移动到目标目录
+  // // 将临时文件移动到目标目录
   const tempFilePath = path.join(tempDir, file.filename);
-  const targetFilePath = path.join(uploadDirPath, chunkIndex);
+  const targetFilePath = path.join(uploadDirPath, chunkIndex.toString());
   fs.renameSync(tempFilePath, targetFilePath);
+  console.log(fs.readdirSync(uploadDirPath).length)
 
-  // 检查是否所有块都已上传
+  // // 检查是否所有块都已上传
   const uploadedChunks = fs.readdirSync(uploadDirPath);
   if (uploadedChunks.length === Number(totalChunks)) {
     // 合并所有块为完整文件
     const finalFilePath = path.join(uploadDir, originalFilename);
     for (let i = 0; i < totalChunks; i++) {
-      const chunkPath = path.join(uploadDirPath, String(i));
+      const chunkPath = path.join(uploadDirPath, i.toString());
       const chunkData = fs.readFileSync(chunkPath);
       fs.appendFileSync(finalFilePath, chunkData);
       fs.unlinkSync(chunkPath); // 删除已合并的块文件
