@@ -1,24 +1,21 @@
 var express = require('express');
 var router = express.Router();
-const { blogPool, skyPlool } = require('../config/mysql')
+const db = require('../sqlHandle/test')
 /* GET home page. */
-router.get('/', function (req, res, next) {
-  res.send('respond with a index');
-  const sql = 'SELECT * FROM user'
-  blogPool.query(sql, (err, result) => {
-    if (err) {
-      console.log(err)
-    } else {
-      console.log('blogPool', result)
-    }
-  })
-  skyPlool.query(sql, (err, result) => {
-    if (err) {
-      console.log(err)
-    } else {
-      console.log('skyPlool', result)
-    }
-  })
+router.get('/', async function (req, res, next) {
+  const data = {
+    blogPool: [],
+    skyPool: []
+  }
+  try {
+    await db.getAllUsers().then(results => {
+      console.log(results)
+      res.send(results)
+    })
+  } catch (err) {
+    console.log(err)
+    res.send(err)
+  }
 });
 
 module.exports = router;

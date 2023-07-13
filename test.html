@@ -1,0 +1,189 @@
+<!-- <!DOCTYPE html>
+<html>
+
+<head>
+    <title>Large File Upload</title>
+    <style>
+        div {
+            height: 300px;
+        }
+    </style>
+</head>
+
+<body>
+    <input type="file" id="file-input" />
+    <button id="upload-btn">Upload</button>
+    <div id="upload-status"></div>
+
+    <script>
+        document.getElementById('upload-btn').addEventListener('click', function () {
+            const fileInput = document.getElementById('file-input');
+            const file = fileInput.files[0];
+            console.log('file', file)
+
+            if (!file) {
+                return;
+            }
+            const chunkSize = 1 * 1024 * 1024; // 1MB
+            const maxConcurrentRequests = 3; // 最大并发请求数量
+            let offset = 0;
+            let activeRequests = 0;
+
+            function uploadChunk() {
+                if (activeRequests >= maxConcurrentRequests) {
+                    return; // 达到最大并发请求数量，暂停发送新请求
+                }
+
+                const chunk = file.slice(offset, offset + chunkSize);
+                const id = Symbol()
+                const formData = new FormData();
+                formData.append('chunk', chunk);
+                formData.append('id', id)
+
+                fetch('http://localhost:3000/uploads/uploads', {
+                    method: 'POST',
+                    body: formData
+                }).then(response => {
+                        activeRequests--;
+                        if (response.ok) {
+                            offset += chunkSize;
+
+                            if (offset < file.size) {
+                                uploadChunk();
+                            } else {
+                                document.getElementById('upload-status').innerText = 'File uploaded!';
+                            }
+                        } else {
+                            throw new Error('Upload failed: ' + response.status + ' ' + response.statusText);
+                        }
+                    }).catch(error => {
+                      console.console(error);
+                      console.log('111')
+                      return Promise.reject(error); 
+                    });
+            }
+            function processUpload() {
+                while (offset < file.size && activeRequests < maxConcurrentRequests) {
+                    uploadChunk();
+                    activeRequests++;
+                }
+            }
+
+            processUpload();
+        });
+    </script>
+</body>
+
+</html> -->
+
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>课程表</title>
+  <style>
+    .timetable {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      grid-template-rows: repeat(7, 1fr);
+      grid-gap: 10px;
+      width: 700px;
+      height: 500px;
+      margin: 20px auto;
+      border: 1px solid #ccc;
+      padding: 10px;
+    }
+
+    .slot {
+      border: 1px solid #999;
+      padding: 10px;
+    }
+
+    .course {
+      background-color: #f2f2f2;
+      border: 1px solid #999;
+      padding: 10px;
+      cursor: move;
+    }
+
+    .course.dragging {
+      opacity: 0.5;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="timetable">
+    <div class="slot" data-time="morning-1"></div>
+    <div class="slot" data-time="morning-2"></div>
+    <div class="slot" data-time="morning-3"></div>
+    <div class="slot" data-time="afternoon-1"></div>
+    <div class="slot" data-time="afternoon-2"></div>
+    <div class="slot" data-time="afternoon-3"></div>
+    <div class="slot" data-time="afternoon-4"></div>
+  </div>
+
+  <div class="course" draggable="true">语文</div>
+  <div class="course" draggable="true">数学</div>
+  <div class="course" draggable="true">英语</div>
+  <div class="course" draggable="true">物理</div>
+  <div class="course" draggable="true">化学</div>
+  <div class="course" draggable="true">生物</div>
+  <div class="course" draggable="true">历史</div>
+  <div class="course" draggable="true">地理</div>
+
+  <script>
+    const slots = document.querySelectorAll('.slot');
+    const courses = document.querySelectorAll('.course');
+
+    slots.forEach(slot => {
+      slot.addEventListener('dragover', handleDragOver);
+      slot.addEventListener('dragenter', handleDragEnter);
+      slot.addEventListener('dragleave', handleDragLeave);
+      slot.addEventListener('drop', handleDrop);
+    });
+
+    courses.forEach(course => {
+      course.addEventListener('dragstart', handleDragStart);
+      course.addEventListener('dragend', handleDragEnd);
+    });
+
+    function handleDragStart(event) {
+      event.currentTarget.classList.add('dragging');
+    }
+
+    function handleDragEnd(event) {
+      event.currentTarget.classList.remove('dragging');
+    }
+
+    function handleDragOver(event) {
+      event.preventDefault();
+    }
+
+    function handleDragEnter(event) {
+      event.currentTarget.classList.add('highlight');
+    }
+
+    function handleDragLeave(event) {
+      event.currentTarget.classList.remove('highlight');
+    }
+
+    function handleDrop(event) {
+      event.preventDefault();
+      event.currentTarget.classList.remove('highlight');
+
+      const course = document.querySelector('.dragging');
+      const time = event.currentTarget.getAttribute('data-time');
+
+      if (course && time) {
+        event.currentTarget.appendChild(course);
+      }
+    }
+  </script>
+</body>
+
+</html>
+
+
+
+

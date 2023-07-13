@@ -1,0 +1,34 @@
+const fs = require('fs');
+
+function saveReqToFile(req, filePath, callback) {
+  // 用于存储已遍历的对象引用
+  const seen = [];
+
+  // replacer 函数，处理循环引用情况
+  const replacer = (key, value) => {
+    if (typeof value === 'object' && value !== null) {
+      if (seen.indexOf(value) !== -1) {
+        // 如果对象已被遍历，返回一个占位符字符串
+        return '[Circular Reference]';
+      }
+      seen.push(value);
+    }
+    return value;
+  };
+
+  // 将 req 对象转换为 JSON 字符串，使用 replacer 函数处理循环引用
+  const reqData = JSON.stringify(req, replacer, 2);
+
+  // 将 req 数据写入文件
+  fs.writeFile(filePath, reqData, (err) => {
+    if (err) {
+      console.error('Error writing req to file:', err);
+      return callback(err);
+    }
+
+    console.log('req object written to file successfully');
+    callback(null);
+  });
+}
+
+module.exports = saveReqToFile;

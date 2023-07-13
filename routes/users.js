@@ -1,15 +1,15 @@
 var express = require('express');
 var router = express.Router();
-const db = require('../config/mysql')
+const {blogPool} = require('../config/mysql')
 const jwt = require('jsonwebtoken')
 
 /* GET users listing. */
-router.get('/logIn', function (req, res, next) {
+router.get('/login', function (req, res, next) {
   const { username, password } = req.query
   console.log(req.query)
   console.log(username, password)
   const sql = 'SELECT * FROM user WHERE name = ? AND password = ?'
-  db.query(sql, [username, password], (err, result) => {
+  blogPool.query(sql, [username, password], (err, result) => {
     if (err) {
       console.log(err)
     } else {
@@ -35,10 +35,11 @@ router.get('/logIn', function (req, res, next) {
 router.post('/register', function (req, res, next) {
   const { username, password } = req.body
   const select_sql = 'SELECT * FROM user WHERE name = ?'
-  db.query(select_sql, [username], (err, result) => {
+  blogPool.query(select_sql, [username], (err, result) => {
     if (err) {
       console.log(err)
     } else {
+      console.log(result)
       if (result.length > 0) {
         res.send({
           code: 1,
@@ -46,7 +47,7 @@ router.post('/register', function (req, res, next) {
         })
       } else {
         const sql = 'INSERT INTO user (name, password) VALUES (?, ?)'
-        db.query(sql, [username, password], (err, result) => {
+        blogPool.query(sql, [username, password], (err, result) => {
           if (err) {
             console.log(err)
           } else {
