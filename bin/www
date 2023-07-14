@@ -7,6 +7,7 @@
 var app = require('../app');
 var debug = require('debug')('express-server:server');
 var http = require('http');
+const WebSocket = require('ws');
 
 /**
  * Get port from environment and store in Express.
@@ -20,6 +21,36 @@ app.set('port', port);
  */
 
 var server = http.createServer(app);
+
+// 创建WebSocket服务器
+const wss = new WebSocket.Server({ noServer: true });
+
+// 处理WebSocket连接
+function handleWebSocketConnection(socket) {
+  console.log('WebSocket连接已建立');
+
+  socket.on('message', message => {
+    console.log('收到消息：', message.toString());
+
+    const response = `收到消息：${message}`;
+
+    // 发送回复消息给客户端
+    socket.send(response);
+  });
+
+  socket.on('close', () => {
+    console.log('WebSocket连接已关闭');
+  });
+}
+
+// 在HTTP服务器上创建WebSocket连接
+server.on('upgrade', (request, socket, head) => {
+  if (request.url === '/socket') {
+    wss.handleUpgrade(request, socket, head, handleWebSocketConnection);
+  } else {
+    socket.destroy();
+  }
+});
 
 /**
  * Listen on provided port, on all network interfaces.

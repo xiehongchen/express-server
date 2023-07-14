@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>拖拽课程表</title>
+  <style>
+    .container {
+      display: flex;
+    }
+
+    .course {
+      width: 50px;
+      height: 30px;
+      line-height: 30px;
+      text-align: center;
+      background-color: red;
+      border: 1px solid #999;
+      margin: 10px;
+      cursor: move;
+      z-index: 1;
+    }
+
+    .timetable {
+      display: grid;
+      grid-template-columns: repeat(8, 80px);
+      grid-template-rows: repeat(8, 50px);
+      grid-gap: 10px;
+      width: 710px;
+      height: 470px;
+      margin: 20px 10px;
+      border: 1px solid #ccc;
+      padding: 10px;
+    }
+
+    .slot {
+      border: 1px solid #999;
+      /* padding: 10px; */
+      text-align: center;
+    }
+
+    .time-slot {
+      font-weight: bold;
+    }
+    .a {
+        grid-row: span 3;
+        line-height: 170px;
+    }
+    .b {
+        grid-row: span 4;
+        line-height: 230px;
+    }
+
+    .day-slot {
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div>
+      <div class="course" draggable="true">语文</div>
+      <div class="course" draggable="true">数学</div>
+      <div class="course" draggable="true">英语</div>
+      <div class="course" draggable="true">物理</div>
+      <div class="course" draggable="true">化学</div>
+      <div class="course" draggable="true">生物</div>
+      <div class="course" draggable="true">历史</div>
+      <div class="course" draggable="true">地理</div>
+    </div>
+
+    <div class="timetable">
+      <div class="slot"></div>
+      <div class="slot day-slot">星期一</div>
+      <div class="slot day-slot">星期二</div>
+      <div class="slot day-slot">星期三</div>
+      <div class="slot day-slot">星期四</div>
+      <div class="slot day-slot">星期五</div>
+      <div class="slot day-slot">星期六</div>
+      <div class="slot day-slot">星期日</div>
+      <div class="slot time-slot a">上午</div>
+      <div class="slot" data-day="1" data-time="morning"></div>
+      <div class="slot" data-day="2" data-time="morning"></div>
+      <div class="slot" data-day="3" data-time="morning"></div>
+      <div class="slot" data-day="4" data-time="morning"></div>
+      <div class="slot" data-day="5" data-time="morning"></div>
+      <div class="slot" data-day="6" data-time="morning"></div>
+      <div class="slot" data-day="7" data-time="morning"></div>
+      <div class="slot" data-day="1" data-time="morning"></div>
+      <div class="slot" data-day="2" data-time="morning"></div>
+      <div class="slot" data-day="3" data-time="morning"></div>
+      <div class="slot" data-day="4" data-time="morning"></div>
+      <div class="slot" data-day="5" data-time="morning"></div>
+      <div class="slot" data-day="6" data-time="morning"></div>
+      <div class="slot" data-day="7" data-time="morning"></div>
+      <div class="slot" data-day="1" data-time="morning"></div>
+      <div class="slot" data-day="2" data-time="morning"></div>
+      <div class="slot" data-day="3" data-time="morning"></div>
+      <div class="slot" data-day="4" data-time="morning"></div>
+      <div class="slot" data-day="5" data-time="morning"></div>
+      <div class="slot" data-day="6" data-time="morning"></div>
+      <div class="slot" data-day="7" data-time="morning"></div>
+      <div class="slot time-slot b">下午</div>
+      <div class="slot" data-day="1" data-time="afternoon"></div>
+      <div class="slot" data-day="2" data-time="afternoon"></div>
+      <div class="slot" data-day="3" data-time="afternoon"></div>
+      <div class="slot" data-day="4" data-time="afternoon"></div>
+      <div class="slot" data-day="5" data-time="afternoon"></div>
+      <div class="slot" data-day="6" data-time="afternoon"></div>
+      <div class="slot" data-day="7" data-time="afternoon"></div>
+      <div class="slot" data-day="1" data-time="afternoon"></div>
+      <div class="slot" data-day="2" data-time="afternoon"></div>
+      <div class="slot" data-day="3" data-time="afternoon"></div>
+      <div class="slot" data-day="4" data-time="afternoon"></div>
+      <div class="slot" data-day="5" data-time="afternoon"></div>
+      <div class="slot" data-day="6" data-time="afternoon"></div>
+      <div class="slot" data-day="7" data-time="afternoon"></div>
+      <div class="slot" data-day="1" data-time="afternoon"></div>
+      <div class="slot" data-day="2" data-time="afternoon"></div>
+      <div class="slot" data-day="3" data-time="afternoon"></div>
+      <div class="slot" data-day="4" data-time="afternoon"></div>
+      <div class="slot" data-day="5" data-time="afternoon"></div>
+      <div class="slot" data-day="6" data-time="afternoon"></div>
+      <div class="slot" data-day="7" data-time="afternoon"></div>
+      <div class="slot" data-day="1" data-time="afternoon"></div>
+      <div class="slot" data-day="2" data-time="afternoon"></div>
+      <div class="slot" data-day="3" data-time="afternoon"></div>
+      <div class="slot" data-day="4" data-time="afternoon"></div>
+      <div class="slot" data-day="5" data-time="afternoon"></div>
+      <div class="slot" data-day="6" data-time="afternoon"></div>
+      <div class="slot" data-day="7" data-time="afternoon"></div>
+    </div>
+  </div>
+
+  <script>
+    const courses = document.querySelectorAll('.course');
+    const slots = document.querySelectorAll('.slot');
+    const timetable = document.querySelector('.timetable');
+
+    courses.forEach(course => {
+      course.addEventListener('dragstart', handleDragStart);
+      course.addEventListener('dragend', handleDragEnd);
+    });
+
+    slots.forEach(slot => {
+      slot.addEventListener('dragover', handleDragOver);
+      slot.addEventListener('drop', handleDrop);
+    });
+
+    function handleDragStart(event) {
+      event.dataTransfer.setData('text/plain', event.target.innerText);
+    }
+
+    function handleDragEnd(event) {
+      event.target.classList.remove('dragging');
+    }
+
+    function handleDragOver(event) {
+      event.preventDefault();
+    }
+
+    function handleDrop(event) {
+      event.preventDefault();
+
+      const courseName = event.dataTransfer.getData('text/plain');
+      const day = event.currentTarget.getAttribute('data-day');
+      const time = event.currentTarget.getAttribute('data-time');
+
+      const existingCourse = event.currentTarget.querySelector('.course');
+      if (existingCourse) {
+        return; // 若已存在科目，则不执行后续操作
+      }
+
+
+      if (courseName && day && time) {
+        const course = document.createElement('div');
+        console.log(course)
+        course.innerText = courseName;
+        course.classList.add('course');
+        course.draggable = true;
+        course.addEventListener('dragstart', handleDragStart);
+
+        const rect = event.currentTarget.getBoundingClientRect();
+        console.log(rect)
+        // course.style.left = `${rect.left}px`;
+        // course.style.top = `${rect.top}px`;
+        course.style.width = `${rect.width - 2}px`;
+        course.style.height = `${rect.height - 2}px`;
+        course.style.lineHeight = `${rect.height - 2}px`;
+        course.style.margin = '0px';
+
+
+        event.currentTarget.appendChild(course);
+      }
+    }
+
+    timetable.addEventListener('dragend', function (event) {
+      const course = event.target;
+      if (timetable.contains(course)) {
+        course.remove();
+      }
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>课程表</title>
+  <style>
+    .box {
+      display: flex;
+    }
+    .timetable {
+      display: grid;
+      grid-template-columns: repeat(8, 1fr);
+      grid-template-rows: repeat(8, 1fr);
+      grid-gap: 10px;
+      width: 700px;
+      height: 500px;
+      margin: 20px 10px;
+      border: 1px solid #ccc;
+      padding: 10px;
+    }
+
+    .slot {
+      border: 1px solid #999;
+      padding: 10px;
+      text-align: center;
+    }
+
+    .time-slot {
+      font-weight: bold;
+    }
+
+    .day-slot {
+      font-weight: bold;
+    }
+
+    .course {
+      background-color: #f2f2f2;
+      border: 1px solid #999;
+      padding: 10px;
+      height: 20px;
+      width: 40px;
+      cursor: move;
+    }
+
+    .course.dragging {
+      opacity: 0.5;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="box">
+    <div class="timetable">
+      <div class="slot"></div>
+      <div class="slot day-slot">星期一</div>
+      <div class="slot day-slot">星期二</div>
+      <div class="slot day-slot">星期三</div>
+      <div class="slot day-slot">星期四</div>
+      <div class="slot day-slot">星期五</div>
+      <div class="slot day-slot">星期六</div>
+      <div class="slot day-slot">星期日</div>
+      <div class="slot time-slot">上午</div>
+      <div class="slot" data-day="1" data-time="morning"></div>
+      <div class="slot" data-day="2" data-time="morning"></div>
+      <div class="slot" data-day="3" data-time="morning"></div>
+      <div class="slot" data-day="4" data-time="morning"></div>
+      <div class="slot" data-day="5" data-time="morning"></div>
+      <div class="slot" data-day="6" data-time="morning"></div>
+      <div class="slot" data-day="7" data-time="morning"></div>
+      <div class="slot time-slot">下午</div>
+      <div class="slot" data-day="1" data-time="afternoon"></div>
+      <div class="slot" data-day="2" data-time="afternoon"></div>
+      <div class="slot" data-day="3" data-time="afternoon"></div>
+      <div class="slot" data-day="4" data-time="afternoon"></div>
+      <div class="slot" data-day="5" data-time="afternoon"></div>
+      <div class="slot" data-day="6" data-time="afternoon"></div>
+      <div class="slot" data-day="7" data-time="afternoon"></div>
+    </div>
+
+    <div class="course" draggable="true">语文</div>
+    <div class="course" draggable="true">数学</div>
+    <div class="course" draggable="true">英语</div>
+    <div class="course" draggable="true">物理</div>
+    <div class="course" draggable="true">化学</div>
+    <div class="course" draggable="true">生物</div>
+    <div class="course" draggable="true">历史</div>
+    <div class="course" draggable="true">地理</div>
+  </div>
+
+  <script>
+    const slots = document.querySelectorAll('.slot');
+    const courses = document.querySelectorAll('.course');
+    let coursePositions = {};
+
+    slots.forEach(slot => {
+      slot.addEventListener('dragover', handleDragOver);
+      slot.addEventListener('dragenter', handleDragEnter);
+      slot.addEventListener('dragleave', handleDragLeave);
+      slot.addEventListener('drop', handleDrop);
+    });
+
+    courses.forEach(course => {
+      course.addEventListener('dragstart', handleDragStart);
+      course.addEventListener('dragend', handleDragEnd);
+    });
+
+    function handleDragStart(event) {
+      event.currentTarget.classList.add('dragging');
+    }
+
+    function handleDragEnd(event) {
+      event.currentTarget.classList.remove('dragging');
+    }
+
+    function handleDragOver(event) {
+      event.preventDefault();
+    }
+
+    function handleDragEnter(event) {
+      event.currentTarget.classList.add('highlight');
+    }
+
+    function handleDragLeave(event) {
+      event.currentTarget.classList.remove('highlight');
+    }
+
+    function handleDrop(event) {
+        event.preventDefault();
+      event.currentTarget.classList.remove('highlight');
+
+      const course = document.querySelector('.dragging');
+      // const day = event.currentTarget.getAttribute('data-day');
+      // const time = event.currentTarget.getAttribute('data-time');
+
+      if (course) {
+        const courseId = course.getAttribute('id');
+        // coursePositions[courseId] = { day, time };
+        event.currentTarget.appendChild(course);
+      }
+      
+
+    }
+
+    // function restoreCoursePositions() {
+    //   Object.entries(coursePositions).forEach(([courseId, position]) => {
+    //     const day = position.day;
+    //     const time = position.time;
+    //     const targetSlot = document.querySelector(`.slot[data-day="${day}"][data-time="${time}"]`);
+    //     const course = document.getElementById(courseId);
+
+    //     if (targetSlot && course) {
+    //       targetSlot.appendChild(course);
+    //     }
+    //   });
+    // }
+
+    // // 保存课程位置
+    // window.addEventListener('beforeunload', () => {
+    //   console.log('保存')
+    //   localStorage.setItem('coursePositions', JSON.stringify(coursePositions));
+    // });
+
+    // // 恢复课程位置
+    // window.addEventListener('DOMContentLoaded', () => {
+    //   console.log('恢复')
+    //   const storedPositions = localStorage.getItem('coursePositions');
+    //   if (storedPositions) {
+    //     coursePositions = JSON.parse(storedPositions);
+    //     restoreCoursePositions();
+    //   }
+    // });
+  </script>
+</body>
+
+</html>

@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>WebSocket示例</title>
+</head>
+<body>
+  <h1>WebSocket示例</h1>
+  <input type="text" id="messageInput">
+  <button onclick="sendMessage()">发送</button>
+  <div id="message-container"></div>
+  
+  <script>
+    const messageContainer = document.getElementById('message-container');
+    const socket = new WebSocket('ws://localhost:3000/socket');
+
+    socket.addEventListener('open', event => {
+      console.log('WebSocket连接已打开');
+      socket.send('Hello Server!');
+    });
+
+    socket.addEventListener('message', event => {
+      const message = event.data;
+      displayMessage(message);
+    });
+
+    socket.addEventListener('error', event => {
+      console.error('WebSocket连接错误', event);
+    });
+
+    socket.addEventListener('close', event => {
+      console.log('WebSocket连接已关闭');
+    });
+
+    function displayMessage(message) {
+      const messageElement = document.createElement('p');
+      messageElement.textContent = message;
+      messageContainer.appendChild(messageElement);
+    }
+    function sendMessage() {
+      const messageInput = document.getElementById('messageInput');
+      const message = messageInput.value;
+      socket.send(message);
+      messageInput.value = ''; // 清空输入框
+    }
+  </script>
+</body>
+</html>

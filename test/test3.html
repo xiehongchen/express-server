@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>拖拽画布</title>
+  <style>
+    .canvas {
+      width: 500px;
+      height: 500px;
+      border: 1px solid #ccc;
+      position: relative;
+    }
+    .shape {
+      width: 50px;
+      height: 50px;
+      background-color: red;
+      position: absolute;
+      cursor: move;
+    }
+  </style>
+</head>
+<body>
+  <div class="canvas">
+    <div class="shape" id="shape1"></div>
+    <div class="shape" id="shape2"></div>
+    <div class="shape" id="shape3"></div>
+  </div>
+
+  <script>
+    // 获取画布和图形元素
+    const canvas = document.querySelector('.canvas');
+    const shapes = document.querySelectorAll('.shape');
+
+    // 设置初始位置
+    shapes.forEach(shape => {
+      shape.style.left = '0';
+      shape.style.top = '0';
+    });
+
+    // 添加拖拽事件处理程序
+    shapes.forEach(shape => {
+      shape.addEventListener('mousedown', handleMouseDown);
+    });
+
+    function handleMouseDown(event) {
+      const shape = event.target;
+      const offsetX = event.clientX - shape.offsetLeft;
+      const offsetY = event.clientY - shape.offsetTop;
+
+      document.addEventListener('mousemove', handleMouseMove);
+      document.addEventListener('mouseup', handleMouseUp);
+
+      function handleMouseMove(event) {
+        const canvasRect = canvas.getBoundingClientRect();
+        const newX = event.clientX - offsetX - canvasRect.left;
+        const newY = event.clientY - offsetY - canvasRect.top;
+
+        // 边界检查，限制在画布内移动
+        const canvasWidth = canvas.offsetWidth;
+        const canvasHeight = canvas.offsetHeight;
+        const shapeWidth = shape.offsetWidth;
+        const shapeHeight = shape.offsetHeight;
+        const maxX = canvasWidth - shapeWidth;
+        const maxY = canvasHeight - shapeHeight;
+
+        // 限制位置不超出画布边界
+        const clampedX = Math.max(0, Math.min(newX, maxX));
+        const clampedY = Math.max(0, Math.min(newY, maxY));
+
+        shape.style.left = `${clampedX}px`;
+        shape.style.top = `${clampedY}px`;
+      }
+
+      function handleMouseUp() {
+        document.removeEventListener('mousemove', handleMouseMove);
+        document.removeEventListener('mouseup', handleMouseUp);
+      }
+    }
+  </script>
+</body>
+</html>

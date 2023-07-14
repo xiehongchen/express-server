@@ -73,17 +73,18 @@ router.post('/upload2', upload.single('chunk'), (req, res) => {
 });
 
 router.post('/merge', upload.single('chunk'), (req, res) => {
-  saveReqToFile(req, 'req.json', () => {})
-  saveReqToFile(req.body, 'req.body.json', () => {})
+  // saveReqToFile(req, 'req.json', () => {})
+  // saveReqToFile(req.body, 'req.body.json', () => {})
   const file = req.file;
   const chunkIndex = req.body.chunkIndex;
   const totalChunks = req.body.totalChunks;
   const originalFilename = req.body.originalFilename;
 
-  console.log('__dirname', __dirname)
+  // console.log('__dirname', __dirname)
   const uploadDir = path.join(__dirname, '../uploads');
+  const uploadDir2 = path.join(__dirname, '../uploads/images');
   const tempDir = path.join(__dirname, '../uploads/temp');
-  console.log('uploadDir', uploadDir)
+  // console.log('uploadDir', uploadDir)
 
   // 按照文件名创建目录
   const uploadDirPath = path.join(uploadDir, originalFilename);
@@ -95,16 +96,21 @@ router.post('/merge', upload.single('chunk'), (req, res) => {
   const tempFilePath = path.join(tempDir, file.filename);
   const targetFilePath = path.join(uploadDirPath, chunkIndex.toString());
   fs.renameSync(tempFilePath, targetFilePath);
-  console.log(fs.readdirSync(uploadDirPath).length)
 
   // // 检查是否所有块都已上传
   const uploadedChunks = fs.readdirSync(uploadDirPath);
+
+  console.log(uploadedChunks.length)
+  console.log(Number(totalChunks))
   if (uploadedChunks.length === Number(totalChunks)) {
     // 合并所有块为完整文件
-    const finalFilePath = path.join(uploadDir, originalFilename);
+    const finalFilePath = path.join(uploadDir2, originalFilename);
+    console.log(finalFilePath)
     for (let i = 0; i < totalChunks; i++) {
       const chunkPath = path.join(uploadDirPath, i.toString());
+      console.log(chunkPath)
       const chunkData = fs.readFileSync(chunkPath);
+      console.log(chunkData)
       fs.appendFileSync(finalFilePath, chunkData);
       fs.unlinkSync(chunkPath); // 删除已合并的块文件
     }

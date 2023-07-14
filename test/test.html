@@ -26,8 +26,8 @@
       if (!file) {
         return;
       }
-      const chunkSize = 50 * 1024; // 1MB
-      const maxConcurrentRequests = 3; // 最大并发请求数量
+      const chunkSize = 1024 * 1024; // 1MB
+      const maxConcurrentRequests = 5; // 最大并发请求数量
       let offset = 0;
       let activeRequests = 0;
       const totalChunks = Math.ceil(file.size / chunkSize);
@@ -35,7 +35,7 @@
 
 
       function uploadChunk() {
-        // console.log('chunkIndex', chunkIndex)
+        console.log('chunkIndex', chunkIndex)
         if (activeRequests >= maxConcurrentRequests) {
           return; // 达到最大并发请求数量，暂停发送新请求
         }
