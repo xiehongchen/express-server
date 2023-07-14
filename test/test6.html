@@ -31,15 +31,28 @@
   <div id="chartContainer">
     <div class="chart" id="radarChart"></div>
     <div class="chart" id="gaugeChart"></div>
+    <button onclick="add()">点击</button>
     <div class="chart" id="funnelChart"></div>
     <div class="chart" id="treeChart"></div>
     <div class="chart1" id="mapChart"></div>
   </div>
 
+
   <script>
     // Radar Chart
     var radarChart = echarts.init(document.getElementById('radarChart'));
-
+    let a = 0
+    function add () {
+      a += 10
+      gaugeChart.setOption({
+        series:[{
+          data: [{
+          value: `${a}`,
+          name: '电量'
+        }]
+        }]
+      })
+    }
     var radarOption = {
       title: {
         text: 'Radar Chart'
@@ -98,8 +111,8 @@
           formatter: '{value}%'
         },
         data: [{
-          value: 70,
-          name: 'Completion'
+          value: 0,
+          name: '电量'
         }]
       }]
     };
