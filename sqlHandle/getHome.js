@@ -5,6 +5,18 @@ function getAllTags () {
     return executeQuery(sql)
 }
 
+function getAllClassify () {
+    const sql = 'select * from classList'
+    return executeQuery(sql)
+}
+
+function getAllBlogs () {
+    const sql = 'select * from blogList'
+    return executeQuery(sql)
+}
+
 module.exports = {
-    getAllTags
+    getAllTags,
+    getAllClassify,
+    getAllBlogs
 }
