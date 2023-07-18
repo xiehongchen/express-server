@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+ 
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        body {
+            background-color: #000;
+        }
+ 
+        .left_eye,
+        .right_eye {
+            position: absolute;
+            width: 500px;
+            height: 0;
+            border: 1px solid #000;
+            transform: rotate(0);
+            overflow: hidden;
+        }
+ 
+        .left_eye {
+            left: 40px;
+            background-color: #fff;
+            border-radius: 0 100%;
+            animation: left_open .6s forwards;
+        }
+ 
+        .right_eye {
+            right: 40px;
+            background-color: #9e96af;
+            border-radius: 100% 0;
+            animation: right_open .6s forwards;
+        }
+ 
+        .xielunyan {
+            width: 200px;
+            height: 200px;
+            background: black;
+            border-radius: 50%;
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            margin-left: -100px;
+            margin-top: -100px;
+            box-shadow: 0px 0px 10px 10px #333;
+            animation: left_trun 2s linear infinite;
+        }
+ 
+        .lunhuiyan {
+            width: 300px;
+            height: 300px;
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            margin-left: -150px;
+            margin-top: -150px;
+            animation: right_trun 2s linear infinite;
+        }
+ 
+        .xielunyan:hover,
+        .lunhuiyan:hover {
+            animation-play-state: paused;
+        }
+ 
+        .tongkong {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: black;
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            margin-top: -25px;
+            margin-left: -25px;
+        }
+ 
+        .xing1,
+        .xing2,
+        .xing3 {
+            width: 138px;
+            height: 138px;
+            border-radius: 100% 0px;
+            border: 2px black solid;
+            background: #b10a0a;
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            margin-top: -70px;
+            margin-left: -70px;
+            opacity: 0.6;
+            filter: alpha(opacity=60);
+        }
+ 
+        .xing2 {
+            transform: rotate(60deg);
+        }
+ 
+        .xing3 {
+            transform: rotate(120deg);
+        }
+ 
+        .quan1 {
+            width: 150px;
+            height: 150px;
+            border: 2px solid black;
+            border-radius: 50%;
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            margin-top: -75px;
+            margin-left: -75px;
+        }
+ 
+        .quan2 {
+            width: 220px;
+            height: 220px;
+            border: 2px solid black;
+            border-radius: 50%;
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            margin-top: -110px;
+            margin-left: -110px;
+        }
+ 
+        .quan3 {
+            width: 280px;
+            height: 280px;
+            border: 2px solid black;
+            border-radius: 50%;
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            margin-top: -140px;
+            margin-left: -140px;
+        }
+ 
+        span {
+            display: block;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            position: absolute;
+        }
+ 
+        .up {
+            width: 30px;
+            height: 30px;
+            background: black;
+            left: -15px;
+            top: 0px;
+        }
+ 
+        .down {
+            background: #9e96af;
+            left: -10px;
+            bottom: 0px;
+        }
+ 
+        .dou1,
+        .dou2,
+        .dou3 {
+            width: 20px;
+            height: 40px;
+            background: black;
+            border-radius: 0px 20px 20px 0px;
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            margin-top: -20px;
+            margin-left: -10px;
+        }
+ 
+        .quan1 .dou1 {
+            transform: rotate(120deg) translateX(85px);
+        }
+ 
+        .quan1 .dou2 {
+            transform: rotate(240deg) translateX(85px);
+        }
+ 
+        .quan1 .dou3 {
+            transform: rotate(360deg) translateX(85px);
+        }
+ 
+        .quan2 .dou1 {
+            transform: rotate(60deg) translateX(120px);
+        }
+ 
+        .quan2 .dou2 {
+            transform: rotate(180deg) translateX(120px);
+        }
+ 
+        .quan2 .dou3 {
+            transform: rotate(300deg) translateX(120px);
+        }
+ 
+        .quan3 .dou1 {
+            transform: rotate(120deg) translateX(150px);
+        }
+ 
+        .quan3 .dou2 {
+            transform: rotate(240deg) translateX(150px);
+        }
+ 
+        .quan3 .dou3 {
+            transform: rotate(360deg) translateX(150px);
+        }
+ 
+        @keyframes left_open {
+            0% {
+                height: 0;
+                transform: rotate(0);
+            }
+ 
+            100% {
+                height: 300px;
+                transform: rotate(-15deg);
+            }
+        }
+ 
+        @keyframes right_open {
+            0% {
+                height: 0;
+                transform: rotate(0);
+            }
+ 
+            100% {
+                height: 300px;
+                transform: rotate(15deg);
+            }
+        }
+ 
+        @keyframes left_trun {
+            0% {
+                transform: rotate(0);
+            }
+ 
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+ 
+        @keyframes right_trun {
+            0% {
+                transform: rotate(0);
+            }
+ 
+            100% {
+                transform: rotate(-360deg);
+            }
+        }
+    </style>
+</head>
+ 
+<body>
+    <!-- 左眼 -->
+    <div class="left_eye">
+        <div class="xielunyan">
+            <div class="xing1"></div>
+            <!-- <div class="xing2"></div> -->
+            <!-- <div class="xing3"></div> -->
+            <!-- <div class="tongkong"></div> -->
+        </div>
+    </div>
+    <!-- <div class="right_eye">
+        <div class="lunhuiyan">
+            <div class="quan1">
+                <div class="dou1">
+                    <span class="down"></span>
+                    <span class="up"></span>
+                </div>
+                <div class="dou2">
+                    <span class="down"></span>
+                    <span class="up"></span>
+                </div>
+                <div class="dou3">
+                    <span class="down"></span>
+                    <span class="up"></span>
+                </div>
+            </div>
+            <div class="quan2">
+                <div class="dou1">
+                    <span class="down"></span>
+                    <span class="up"></span>
+                </div>
+                <div class="dou2">
+                    <span class="down"></span>
+                    <span class="up"></span>
+                </div>
+                <div class="dou3">
+                    <span class="down"></span>
+                    <span class="up"></span>
+                </div>
+            </div>
+            <div class="quan3">
+                <div class="dou1">
+                    <span class="down"></span>
+                    <span class="up"></span>
+                </div>
+                <div class="dou2">
+                    <span class="down"></span>
+                    <span class="up"></span>
+                </div>
+                <div class="dou3">
+                    <span class="down"></span>
+                    <span class="up"></span>
+                </div>
+            </div>
+            <div class="tongkong"></div>
+        </div>
+    </div> -->
+</body>
+ 
+</html>

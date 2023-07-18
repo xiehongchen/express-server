@@ -1,6 +1,6 @@
 const { blogPool } = require('../config/mysql')
 
-// 封装查询方法
+// 封装方法
 function executeQuery (sql, params = []) {
     return new Promise((resolve, reject) => {
         blogPool.query(sql, params, (err, results) => {

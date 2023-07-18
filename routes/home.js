@@ -2,6 +2,7 @@ var express = require('express');
 var router = express.Router();
 const db = require('../sqlHandle/getHome')
 const fs = require('fs')
+const marked = require('marked')
 
 router.get('/tags', async function (req, res, next) {
   try {
@@ -42,7 +43,9 @@ router.get('/markdown', async function (req, res, next) {
       console.log(err)
       return res.status(500).send('服务器内部错误')
     }
-    res.send(data)
+    res.send({
+      data: data
+    })
   })
 })
 
