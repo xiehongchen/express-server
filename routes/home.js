@@ -43,8 +43,9 @@ router.get('/markdown', async function (req, res, next) {
       console.log(err)
       return res.status(500).send('服务器内部错误')
     }
+    const html = marked.marked(data,{mangle: false,headerIds: false});
     res.send({
-      data: data
+      data: html
     })
   })
 })
