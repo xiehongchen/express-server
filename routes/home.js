@@ -45,7 +45,7 @@ router.get('/markdown', async function (req, res, next) {
     }
     const html = marked.marked(data,{mangle: false,headerIds: false});
     res.send({
-      data: html
+      data: data
     })
   })
 })
