@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>超市货架</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+    }
+    canvas {
+      border: 1px solid #ccc;
+    }
+  </style>
+</head>
+<body>
+  <div id="container"></div>
+
+  <script src="https://unpkg.com/konva@9/konva.min.js"></script>
+
+  <script>
+    const container = document.getElementById('container');
+    const stage = new Konva.Stage({
+      container: 'container',
+      width: 1800,
+      height: 1600,
+    });
+    const layer = new Konva.Layer();
+
+    // 绘制货架
+    const shelf = new Konva.Rect({
+      x: 50,
+      y: 50,
+      width: 600,
+      height: 400,
+      fill: '#f0f0f0',
+      stroke: '#ccc',
+      strokeWidth: 2,
+    });
+
+    // 绘制商品
+    const product = new Konva.Rect({
+      x: 100,
+      y: 100,
+      width: 100,
+      height: 80,
+      fill: 'blue',
+      draggable: true, // 允许拖拽
+    });
+    var MAX_WIDTH = 200;
+      // create new transformer
+      var tr = new Konva.Transformer({
+        boundBoxFunc: function (oldBoundBox, newBoundBox) {
+          // "boundBox" is an object with
+          // x, y, width, height and rotation properties
+          // transformer tool will try to fit nodes into that box
+
+          // the logic is simple, if new width is too big
+          // we will return previous state
+          if (Math.abs(newBoundBox.width) > MAX_WIDTH) {
+            return oldBoundBox;
+          }
+
+          return newBoundBox;
+        },
+      });
+      tr.nodes([product]);
+      layer.add(tr);
+      
+
+    layer.add(shelf);
+    layer.add(product);
+    stage.add(layer);
+
+    // 添加事件监听器，实现交互
+    product.on('dragmove', () => {
+      layer.draw();
+    });
+
+    product.on('transform', () => {
+      layer.draw();
+    });
+  </script>
+</body>
+</html>

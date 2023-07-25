@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>主线程和Web Worker测试</title>
+</head>
+<body>
+  <h1>主线程和Web Worker测试</h1>
+  <button onclick="runInMainThread()">在主线程中执行</button>
+  <button onclick="runInWebWorker()">在Web Worker中执行</button>
+  <p id="result"></p>
+  <p id="result1"></p>
+
+  <script>
+    let resultElem = document.getElementById('result');
+    let resultElem1 = document.getElementById('result1');
+
+    // 在主线程中执行
+    function runInMainThread() {
+      const startTime = performance.now();
+      const result = fibonacci(40);
+      const endTime = performance.now();
+      displayResult(`在主线程中执行，结果：${result}，耗时：${endTime - startTime}ms`);
+    }
+
+    // 在Web Worker中执行
+    function runInWebWorker() {
+      const worker = new Worker('worker.js');
+      const startTime = performance.now();
+
+      // 接收来自Web Worker的消息
+      worker.onmessage = (event) => {
+        const endTime = performance.now();
+        displayResult1(`在Web Worker中执行，结果：${event.data.result}，耗时：${endTime - startTime}ms`);
+      };
+
+      // 向Web Worker发送消息，触发执行
+      worker.postMessage('calculate');
+    }
+
+    // 显示测试结果
+    function displayResult(message) {
+      resultElem.textContent = message;
+    }
+    function displayResult1(message) {
+      resultElem1.textContent = message;
+    }
+
+    // 斐波那契数列计算函数
+    function fibonacci(n) {
+      if (n <= 1) {
+        return n;
+      } else {
+        return fibonacci(n - 1) + fibonacci(n - 2);
+      }
+    }
+  </script>
+</body>
+</html>

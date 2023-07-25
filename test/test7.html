@@ -43,11 +43,11 @@
       background-color: antiquewhite;
     }
     blockquote {
+      margin: 0;
       border-left: 2px solid;
-      margin-left: 5px;
     }
     blockquote p {
-      margin: 0;
+      margin: 0 0 0 5px;
     }
   </style>
 </head>
@@ -74,10 +74,8 @@ function handleClick() {
   method: 'GET'
 }).then( res => {
   console.log(res)
-  return
 }).catch( err => {
   console.log(err)
-  return
 })
 }
 
