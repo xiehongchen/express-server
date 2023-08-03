@@ -22,11 +22,11 @@ function saveReqToFile(req, filePath, callback) {
   // 将 req 数据写入文件
   fs.writeFile(filePath, reqData, (err) => {
     if (err) {
-      console.error('Error writing req to file:', err);
+      console.error('下载失败:', err);
       return callback(err);
     }
 
-    console.log('req object written to file successfully');
+    console.log('文件下载成功');
     callback(null);
   });
 }
