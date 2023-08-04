@@ -12,7 +12,8 @@ const cors = require('cors');
 const axios = require('axios');
 const cron = require('node-cron');
 var app = express();
-const saveReqToFile = require('./utils/reqToFile');
+
+
 
 const logger = winston.createLogger({
   transports: [
@@ -30,23 +31,7 @@ const logStream = {
   }
 };
 
-// 爬取函数
-async function crawlVideos() {
-  try {
-    const response = await axios.get('https://api.bilibili.com/x/web-interface/newlist');
-    const videos = response.data.data.archives;
-    saveReqToFile(videos, 'req.json', () => {})
-    const videoList = videos.map(video => ({
-      aid: video.aid,
-      title: video.title,
-      author: video.author,
-      play: video.play,
-    }));
-    // saveReqToFile(videoList, 'req.json', () => {})
-  } catch (error) {
-    console.error('Error fetching video list:', error);
-  }
-}
+
 // crawlVideos()
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));

@@ -31,4 +31,33 @@ function saveReqToFile(req, filePath, callback) {
   });
 }
 
-module.exports = saveReqToFile;
+// html文件保存为marked文件
+async function saveHtmltoMarked(title, content) {
+  try {
+    // 将内容格式化为Markdown
+    const markdownContent = `# ${title}\n\n${content}`;
+
+    // 将Markdown内容保存到文件
+    const filename = `${title}.md`;
+    fs.writeFileSync(filename, markdownContent, 'utf8');
+    console.log(`文件保存为: ${filename}`);
+  } catch (error) {
+    console.error('错误:', error.message);
+    throw error;
+  }
+}
+
+async function saveHtmltoFile(title, content) {
+  try {
+    // 将内容格式化为Markdown
+    const filename = `${title}.html`;
+
+    // 将Markdown内容保存到文件
+    fs.writeFileSync(filename, content, 'utf8');
+  } catch (error) {
+    console.error('错误:', error.message);
+    throw error;
+  }
+}
+
+module.exports = { saveReqToFile, saveHtmltoMarked, saveHtmltoFile };
