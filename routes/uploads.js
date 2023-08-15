@@ -122,4 +122,37 @@ router.post('/merge', upload.single('chunk'), (req, res) => {
   res.sendStatus(200);
 });
 
+// 合并文件
+router.post("/mergeFile", async (ctx, next) => {
+  //传入本来的文件名，合并文件
+  const { name } = ctx.request.body;
+  const fname = name.split(".")[0];
+  const chunkDir = path.join(UPLOAD_DIR, fname);
+  console.log("chunkDir", chunkDir);
+  // console.log('chunkDir', chunkDir)
+  const chunks = await fse.readdir(chunkDir);
+  // console.log('chunks',chunks)
+  chunks
+    .sort((a, b) => a - b)
+    .map((chunkPath) => {
+      // 合并文件
+      let data = fse.readFileSync(`${chunkDir}/${chunkPath}`);
+      fse.appendFileSync(path.join(UPLOAD_DIR, name), data);
+    });
+  // 删除临时文件夹
+  fse.removeSync(chunkDir, (err) => {
+    console.log("success");
+    //合并成功后将原本数据清空
+    fileObj[name] = [];
+    if (err) throw err;
+  });
+
+  // 返回文件地址
+  ctx.body = {
+    msg: "合并成功",
+    url: `http://localhost:3001/bigFile/upload/${name}`,
+  };
+});
+
+
 module.exports = router;
