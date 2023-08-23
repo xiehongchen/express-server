@@ -1,4 +1,4 @@
-const { blogPool } = require('../config/mysql')
+const { blogPool, skyPlool } = require('../config/mysql')
 
 // 封装方法
 function executeQuery (sql, params = []) {
@@ -13,6 +13,19 @@ function executeQuery (sql, params = []) {
     })
 }
 
+function executeQuerySky (sql, params = []) {
+    return new Promise((resolve, reject) => {
+        skyPlool.query(sql, params, (err, results) => {
+            if (err) {
+                reject(err)
+            } else {
+                resolve(results)
+            }
+        })
+    })
+}
+
 module.exports = {
-    executeQuery
+    executeQuery,
+    executeQuerySky
 }

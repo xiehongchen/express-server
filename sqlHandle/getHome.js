@@ -1,4 +1,4 @@
-const { executeQuery } = require('./index.js')
+const { executeQuery, executeQuerySky } = require('./index.js')
 
 function getAllTags () {
     const sql = 'select * from tags'
@@ -15,8 +15,13 @@ function getAllBlogs () {
     return executeQuery(sql)
 }
 
+function getAllArticles () {
+    const sql = 'select * from article'
+    return executeQuerySky(sql)
+}
 module.exports = {
     getAllTags,
     getAllClassify,
-    getAllBlogs
+    getAllBlogs,
+    getAllArticles
 }
