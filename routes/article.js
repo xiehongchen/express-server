@@ -48,6 +48,13 @@ router.post('/addByUrl', async function (req, res, next) {
   const currentTime = new Date();
   let title = ''
   let author = ''
+  if (!website.includes('juejin') && !website.includes('cnblogs')) {
+    res.send({
+      answer: false,
+      message: '目前仅支持掘金文章'
+    })
+    return
+  }
   await crawlAndParseArticle(website).then(data => {
     title = data.title
     author = data.author

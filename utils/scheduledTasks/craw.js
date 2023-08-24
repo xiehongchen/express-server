@@ -29,14 +29,20 @@ async function crawlAndParseArticle(url) {
 
     // 使用cheerio加载HTML内容
     const $ = cheerio.load(response.data);
-
     // 提取文章的标题和内容
-    const title = $('h1').text().trim().split('\n')[0];
-    // saveHtmltoFile(`${title}.html`, response.data)
-    // const content = $('.article').html(); // 文章内容在class为"article"的元素内
-    const author = $('.name').text().trim().split('\n')[0];
-
-    return { title, author };
+    if (url.includes('juejin')) {
+      const title = $('h1').text().trim().split('\n')[0];
+      // saveHtmltoFile(`${title}.html`, response.data)
+      // const content = $('.article').html(); // 文章内容在class为"article"的元素内
+      const author = $('.name').text().trim().split('\n')[0];
+      return { title, author };
+    }
+    if (url.includes('cnblogs')) {
+      const title = $('title').text().trim().split('-')[0];
+      const author = $('title').text().trim().split('-')[1];
+      console.log(author)
+      return { title, author };
+    }
   } catch (error) {
     console.error('错误:', error.message);
     throw error;
