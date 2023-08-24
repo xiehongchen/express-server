@@ -50,7 +50,7 @@ async function saveHtmltoMarked(title, content) {
 async function saveHtmltoFile(title, content) {
   try {
     // 将内容格式化为Markdown
-    const filename = `${title}.html`;
+    const filename = `./html/${title}.html`;
 
     // 将Markdown内容保存到文件
     fs.writeFileSync(filename, content, 'utf8');

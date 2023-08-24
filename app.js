@@ -8,6 +8,7 @@ var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 var homeRouter = require('./routes/home');
 var uploadsRouter = require('./routes/uploads');
+var articleRouter = require('./routes/article');
 const cors = require('cors');
 const axios = require('axios');
 const cron = require('node-cron');
@@ -51,6 +52,7 @@ app.use('/', indexRouter);
 app.use('/users', usersRouter);
 app.use('/home', homeRouter);
 app.use('/uploads', uploadsRouter);
+app.use('/article', articleRouter);
 
 
 

@@ -8,7 +8,7 @@ async function crawlVideos() {
   try {
     const response = await axios.get('https://api.bilibili.com/x/web-interface/newlist');
     const videos = response.data.data.archives;
-    saveReqToFile(videos, 'req.json', () => {})
+    saveReqToFile(videos, 'req.json', () => { })
     const videoList = videos.map(video => ({
       aid: video.aid,
       title: video.title,
@@ -27,17 +27,16 @@ async function crawlAndParseArticle(url) {
     // 发送HTTP GET请求到文章的URL
     const response = await axios.get(url);
 
-    
-
     // 使用cheerio加载HTML内容
     const $ = cheerio.load(response.data);
 
     // 提取文章的标题和内容
     const title = $('h1').text().trim();
     saveHtmltoFile(`${title}.html`, response.data)
-    const content = $('.article-content').html(); // 假设文章内容在class为"article-content"的元素内
+    const content = $('.article').html(); // 文章内容在class为"article"的元素内
+    const author = $('.name').text().trim().split('\n')[0];
 
-    return { title, content };
+    return { title, author, content };
   } catch (error) {
     console.error('错误:', error.message);
     throw error;
