@@ -15,13 +15,9 @@ function getAllBlogs () {
     return executeQuery(sql)
 }
 
-function getAllArticles () {
-    const sql = 'select * from article'
-    return executeQuerySky(sql)
-}
+
 module.exports = {
     getAllTags,
     getAllClassify,
     getAllBlogs,
-    getAllArticles
 }
