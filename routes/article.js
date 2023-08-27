@@ -4,7 +4,7 @@ const db = require('../sqlHandle/getArticle')
 const { crawlAndParseArticle } = require('../utils/scheduledTasks/craw')
 
 router.post('/add', async function (req, res, next) {
-  const { title, introduction, author, website, note } = req.body
+  const { title, introduction, author, website, note, source } = req.body
   const status = note ? 2 : 1
   const currentTime = new Date();
   const params = [
@@ -14,7 +14,8 @@ router.post('/add', async function (req, res, next) {
     introduction,
     website,
     status,
-    note
+    note,
+    source,
   ]
   try {
     await db.isHasArticle([website]).then(results => {
@@ -42,7 +43,7 @@ router.post('/add', async function (req, res, next) {
 })
 
 router.post('/addByUrl', async function (req, res, next) {
-  const { website } = req.body
+  const { website, tab } = req.body
   // console.log(website)
   // 获取当前时间
   const currentTime = new Date();
@@ -51,7 +52,7 @@ router.post('/addByUrl', async function (req, res, next) {
   if (!website.includes('juejin') && !website.includes('cnblogs')) {
     res.send({
       answer: false,
-      message: '目前仅支持掘金文章'
+      message: '目前仅支持掘金文章、博客园'
     })
     return
   }
@@ -69,7 +70,8 @@ router.post('/addByUrl', async function (req, res, next) {
     '',
     website,
     1,
-    ''
+    '',
+    tab
   ]
   try {
     await db.isHasArticle([website]).then(results => {

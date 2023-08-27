@@ -11,7 +11,7 @@ function getAllArticle (params = []) {
 }
 
 function addArticle (params = []) {
-  const sql = 'insert into article (title, author, createTime, introduction, website, status, note) values(?,?,?,?,?,?,?)'
+  const sql = 'insert into article (title, author, createTime, introduction, website, status, note, source) values(?,?,?,?,?,?,?,?)'
   return executeQuerySky(sql, params)
 }
 
