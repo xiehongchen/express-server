@@ -100,13 +100,13 @@ router.post('/addByUrl', async function (req, res, next) {
 
 router.post('/list', async function (req, res, next) {
   const { tab, page, size } = req.body
-  // console.log(page, size)
+  console.log(tab, page, size)
   try {
     let total
     await db.getAllArticle().then(results => {
       total = results.length
     })
-    await db.getAllArticle([size , (page - 1) * size]).then(results => {
+    await db.getAllArticle([tab, size , (page - 1) * size]).then(results => {
       // console.log(results)
       res.send({
         total: total,

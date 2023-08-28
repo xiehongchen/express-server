@@ -3,7 +3,7 @@ const { executeQuerySky } = require('./index.js')
 function getAllArticle (params = []) {
   let sql = 'select * from article'
   if (params.length > 0) {
-    sql += ' limit ? offset ?'
+    sql += ' where source = ? limit ? offset ?'
     return executeQuerySky(sql, params)
   } else {
     return executeQuerySky(sql)
