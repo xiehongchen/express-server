@@ -16,25 +16,28 @@ router.post('/list', async function (req, res, next) {
 });
 router.post('/add', async function (req, res, next) {
   const { isWork,isExercise,isPlay,isLearn,energy,mood,summarize } = req.body
+  // console.log(req.body)
   const today = new Date().getFullYear() + '-' + (new Date().getMonth() + 1) + '-' + new Date().getDate()
-  console.log(today)
+  // console.log(today)
   const time = new Date()
   console.log(time)
   const params = [
-    time,
-    isWork,
-    isExercise,
-    isPlay,
-    isLearn,
+    isWork ? 1: 0,
+    isExercise ? 1: 0,
+    isPlay ? 1: 0,
+    isLearn ? 1: 0,
     energy,
     mood,
     summarize,
+    time,
+    today
   ]
+  console.log(params)
   try {
     await db.selectDiary([today]).then(results => {
       console.log(results)
       if (results.length === 1) {
-        db.updateDiary([params]).then(results1 => {
+        db.updateDiary([...params]).then(results1 => {
           console.log(results1)
           if(results1.affectedRows === 1) {
             res.send({
@@ -43,7 +46,7 @@ router.post('/add', async function (req, res, next) {
           }
         })
       } else {
-        db.AddDiary([params]).then(results1 => {
+        db.AddDiary([...params]).then(results1 => {
           console.log(results1)
           if(results1.affectedRows === 1) {
             res.send({

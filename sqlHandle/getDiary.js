@@ -13,12 +13,12 @@ function selectDiary (params = []) {
 }
 
 function AddDiary (params = []) {
-  let sql = 'insert into diary (time,isWork,isExercise,isLearn,isPlay,energy,mood,summarize) values(?)'
+  let sql = 'insert into diary (isWork,isExercise,isLearn,isPlay,energy,mood,summarize, time) values(?)'
   return executeQuerySky(sql, params)
 }
 
 function updateDiary (params = []) {
-  let sql = 'update diary set isWork = ?,isExercise = ?,sLearn=?,isPlay=?,energy=?,mood=?,summarize=? where time = ?'
+  let sql = 'update diary set isWork = ?,isExercise = ?,isLearn=?,isPlay=?,energy=?,mood=?,summarize=?, time = ? where DATE(time) = ?'
   return executeQuerySky(sql, params)
 }
 
