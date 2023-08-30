@@ -2,11 +2,14 @@ const { executeQuerySky } = require('./index.js')
 
 function getAllArticle (params = []) {
   let sql = 'select * from article'
-  if (params.length > 0) {
-    sql += ' where source = ? limit ? offset ?'
+  if (params[0] === '') {
+    return executeQuerySky(sql)
+  } else if (params.length === 1) {
+    sql += ' where source = ?'
     return executeQuerySky(sql, params)
   } else {
-    return executeQuerySky(sql)
+    sql += ' where source = ? limit ? offset ?'
+    return executeQuerySky(sql, params)
   }
 }
 
@@ -38,7 +41,13 @@ function deleteArticle (params = []) {
 }
 
 function selectArticle(params = []) {
-  let sql = `select * from article where title like '%${params[0]}%'`
+  let sql = `select * from article`
+  if (params[0].includes('http')) {
+    sql += ` where website = ?`
+    return executeQuerySky(sql, params)
+  } else {
+    sql += ` where title like '%${params[0]}%'`
+  }
   if (params.length > 1) {
     sql += ' limit ? offset ?'
     return executeQuerySky(sql, params.slice(1, params.length + 1))

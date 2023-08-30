@@ -103,7 +103,7 @@ router.post('/list', async function (req, res, next) {
   console.log(tab, page, size)
   try {
     let total
-    await db.getAllArticle().then(results => {
+    await db.getAllArticle([tab]).then(results => {
       total = results.length
     })
     await db.getAllArticle([tab, size , (page - 1) * size]).then(results => {
