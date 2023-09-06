@@ -1,24 +1,42 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-  <meta charset="UTF-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Document</title>
+    <title>多选框示例</title>
 </head>
 <body>
-  <script>
-    class Cat {
-      touchFIsh () {
-        return function fn () {
-          console.log(this)
-        }
-      }
-    }
+    <h3>请选择一个或多个选项：</h3>
+    <input type="checkbox" id="option1" value="Option 1">
+    <label for="option1">选项 1</label><br>
+    <input type="checkbox" id="option2" value="Option 2">
+    <label for="option2">选项 2</label><br>
+    <input type="checkbox" id="option3" value="Option 3">
+    <label for="option3">选项 3</label><br>
 
-    const cat = new Cat
-    const fn = cat.touchFIsh()
-    fn()
-  </script>
+    <button onclick="showSelectedOptions()">显示选中的选项</button>
+
+    <p>你选择的选项是：</p>
+    <ul id="selectedOptions"></ul>
+
+    <script>
+        function showSelectedOptions() {
+            // 获取所有复选框元素
+            const checkboxes = document.querySelectorAll('input[type="checkbox"]');
+            
+            // 获取用于显示选中选项的 ul 元素
+            const selectedOptionsList = document.getElementById('selectedOptions');
+            
+            // 清空已显示的选项
+            selectedOptionsList.innerHTML = '';
+
+            // 遍历复选框元素并显示选中的选项
+            checkboxes.forEach(function(checkbox) {
+                if (checkbox.checked) {
+                    const listItem = document.createElement('li');
+                    listItem.textContent = checkbox.value;
+                    selectedOptionsList.appendChild(listItem);
+                }
+            });
+        }
+    </script>
 </body>
 </html>

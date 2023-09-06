@@ -3,9 +3,10 @@ var router = express.Router();
 const db = require('../sqlHandle/getTodo')
 
 router.get('/list', async function (req, res, next) {
-  const { status } = req.body
+  const {status} = req.query
+  console.log('status', status)
   try {
-    await db.getTodoList(['1']).then(results => {
+    await db.getTodoList([status]).then(results => {
       // console.log(results)
       res.send({
         answer: true,

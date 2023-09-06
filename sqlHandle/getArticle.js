@@ -3,12 +3,13 @@ const { executeQuerySky } = require('./index.js')
 function getAllArticle (params = []) {
   let sql = 'select * from article'
   if (params[0] === '') {
+    sql += ' ORDER BY createTime DESC'
     return executeQuerySky(sql)
   } else if (params.length === 1) {
-    sql += ' where source = ?'
+    sql += ' where source = ? ORDER BY createTime DESC'
     return executeQuerySky(sql, params)
   } else {
-    sql += ' where source = ? limit ? offset ?'
+    sql += ' where source = ? ORDER BY createTime DESC limit ? offset ?'
     return executeQuerySky(sql, params)
   }
 }
