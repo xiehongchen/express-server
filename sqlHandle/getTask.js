@@ -6,7 +6,7 @@ function getTaskList (params) {
 }
 
 function addTask (params) {
-    const sql = 'insert into taskList (event,create_time, status) values(?, ?, 0)'
+    const sql = 'insert into taskList (event,create_time, finish_time, status) values(?, ?, ?, 0)'
     return executeQuerySky(sql, params)
 }
 
