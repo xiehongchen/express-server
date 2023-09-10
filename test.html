@@ -1,42 +1,146 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>多选框示例</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>日期选择器</title>
 </head>
 <body>
-    <h3>请选择一个或多个选项：</h3>
-    <input type="checkbox" id="option1" value="Option 1">
-    <label for="option1">选项 1</label><br>
-    <input type="checkbox" id="option2" value="Option 2">
-    <label for="option2">选项 2</label><br>
-    <input type="checkbox" id="option3" value="Option 3">
-    <label for="option3">选项 3</label><br>
+    <label for="datePicker">选择日期:</label>
+    <input type="text" id="datePicker" readonly>
+    <button id="openDatePicker">选择日期</button>
 
-    <button onclick="showSelectedOptions()">显示选中的选项</button>
-
-    <p>你选择的选项是：</p>
-    <ul id="selectedOptions"></ul>
+    <div id="datePickerContainer" style="display: none;">
+        <select id="yearSelect"></select>
+        <select id="monthSelect"></select>
+        <table id="calendar"></table>
+        <button id="closeDatePicker">关闭</button>
+    </div>
 
     <script>
-        function showSelectedOptions() {
-            // 获取所有复选框元素
-            const checkboxes = document.querySelectorAll('input[type="checkbox"]');
-            
-            // 获取用于显示选中选项的 ul 元素
-            const selectedOptionsList = document.getElementById('selectedOptions');
-            
-            // 清空已显示的选项
-            selectedOptionsList.innerHTML = '';
+        const datePicker = document.getElementById("datePicker");
+        const openDatePicker = document.getElementById("openDatePicker");
+        const datePickerContainer = document.getElementById("datePickerContainer");
+        const yearSelect = document.getElementById("yearSelect");
+        const monthSelect = document.getElementById("monthSelect");
+        const calendar = document.getElementById("calendar");
+        const closeDatePicker = document.getElementById("closeDatePicker");
 
-            // 遍历复选框元素并显示选中的选项
-            checkboxes.forEach(function(checkbox) {
-                if (checkbox.checked) {
-                    const listItem = document.createElement('li');
-                    listItem.textContent = checkbox.value;
-                    selectedOptionsList.appendChild(listItem);
-                }
-            });
+        // 获取当前日期
+        const today = new Date();
+        let selectedDate = today;
+
+        // 创建年份和月份选项
+        function populateYearAndMonth() {
+            for (let year = 1900; year <= today.getFullYear() + 10; year++) {
+                const option = document.createElement("option");
+                option.value = year;
+                option.text = year;
+                yearSelect.appendChild(option);
+            }
+
+            const months = [
+                "一月", "二月", "三月", "四月", "五月", "六月",
+                "七月", "八月", "九月", "十月", "十一月", "十二月"
+            ];
+
+            for (let i = 0; i < months.length; i++) {
+                const option = document.createElement("option");
+                option.value = i;
+                option.text = months[i];
+                monthSelect.appendChild(option);
+            }
         }
+
+        // 创建日历表格
+        function createCalendar(year, month) {
+            const firstDayOfMonth = new Date(year, month, 1);
+            const lastDayOfMonth = new Date(year, month + 1, 0);
+            const daysInMonth = lastDayOfMonth.getDate();
+            const firstDayOfWeek = firstDayOfMonth.getDay();
+
+            const calendarHeader = `
+                <tr>
+                    <th>日</th>
+                    <th>一</th>
+                    <th>二</th>
+                    <th>三</th>
+                    <th>四</th>
+                    <th>五</th>
+                    <th>六</th>
+                </tr>
+            `;
+
+            let calendarBody = "<tr>";
+
+            // 在日历中添加空白格子，直到第一个日期
+            for (let i = 0; i < firstDayOfWeek; i++) {
+                calendarBody += "<td></td>";
+            }
+
+            for (let day = 1; day <= daysInMonth; day++) {
+                calendarBody += `<td>${day}</td>`;
+                if ((day + firstDayOfWeek) % 7 === 0) {
+                    calendarBody += "</tr><tr>";
+                }
+            }
+
+            calendarBody += "</tr>";
+
+            calendar.innerHTML = calendarHeader + calendarBody;
+        }
+
+        // 更新日期选择框中的日期
+        function updateDatePicker() {
+            const year = selectedDate.getFullYear();
+            const month = selectedDate.getMonth();
+            const day = selectedDate.getDate();
+            datePicker.value = `${year}-${month + 1}-${day}`;
+        }
+
+        // 打开日期选择器
+        openDatePicker.addEventListener("click", () => {
+            datePickerContainer.style.display = "block";
+            populateYearAndMonth();
+            yearSelect.value = selectedDate.getFullYear();
+            monthSelect.value = selectedDate.getMonth();
+            createCalendar(selectedDate.getFullYear(), selectedDate.getMonth());
+        });
+
+        // 关闭日期选择器
+        closeDatePicker.addEventListener("click", () => {
+            datePickerContainer.style.display = "none";
+        });
+
+        // 选择年份和月份时更新日历
+        yearSelect.addEventListener("change", () => {
+            const year = parseInt(yearSelect.value);
+            const month = parseInt(monthSelect.value);
+            selectedDate = new Date(year, month, selectedDate.getDate());
+            createCalendar(year, month);
+        });
+
+        monthSelect.addEventListener("change", () => {
+            const year = parseInt(yearSelect.value);
+            const month = parseInt(monthSelect.value);
+            selectedDate = new Date(year, month, selectedDate.getDate());
+            createCalendar(year, month);
+        });
+
+        // 选择日子时更新日期选择框
+        calendar.addEventListener("click", (e) => {
+            if (e.target.tagName === "TD" && e.target.textContent !== "") {
+                const year = selectedDate.getFullYear();
+                const month = selectedDate.getMonth();
+                const day = parseInt(e.target.textContent);
+                selectedDate = new Date(year, month, day);
+                updateDatePicker();
+                datePickerContainer.style.display = "none";
+            }
+        });
+
+        // 初始化日期选择框
+        updateDatePicker();
     </script>
 </body>
 </html>
