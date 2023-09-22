@@ -25,11 +25,48 @@ function delayTask (params) {
     return executeQuerySky(sql, params)
 }
 
+function getEveryTask (params) {
+    const sql = 'select * from every_task'
+    return executeQuerySky(sql, params)
+}
+function getEveryTaskById (params) {
+    const sql = 'select * from every_task where id in (?)'
+    return executeQuerySky(sql, params)
+}
+
+function addEveryDayTask (params) {
+    const sql = 'insert into every_task (event) values(?)'
+    return executeQuerySky(sql, params)
+}
+function addEveryDayTask2 (params) {
+    const sql = 'insert into every_task (event, time) values(?, ?)'
+    return executeQuerySky(sql, params)
+}
+
+function finishEveryDayTask(params) {
+    // 构建参数化插入查询
+    const placeholders = params.map(() => '(?, ?)').join(', ');
+    const values = params.flatMap(item => [item.event, item.time]);
+    const sql = `INSERT INTO finish_task (event, time) VALUES ${placeholders}`;
+    return executeQuerySky(sql, values);
+}
+  
+
+function deleteEveryDayTask (params) {
+    const sql = 'DELETE FROM every_task WHERE id in (?)'
+    return executeQuerySky(sql, params)
+}
 
 module.exports = {
     getTaskList,
     addTask,
     finishTask,
     deleteTask,
-    delayTask
+    delayTask,
+    getEveryTask,
+    getEveryTaskById,
+    addEveryDayTask,
+    addEveryDayTask2,
+    finishEveryDayTask,
+    deleteEveryDayTask
 }
